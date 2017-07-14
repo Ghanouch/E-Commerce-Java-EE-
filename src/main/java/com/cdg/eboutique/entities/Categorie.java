@@ -24,7 +24,7 @@ public class Categorie implements Serializable{
 		@NotEmpty
 		@Size ( min = 4 , max = 20)
 	private String nomCategorie;
-		@Size (min = 5)
+		@Size (min = 5, max= 500)
 	private String description;
 		@Lob
 	private byte[] photo;
