@@ -1,26 +1,34 @@
 package com.cdg.eboutique.controllers;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.cdg.eboutique.entities.Categorie;
 import com.cdg.eboutique.metier.IAdminCategoriesMetier;
 
 @Controller
 @RequestMapping(value = "/adminCat")
-public class AdminCategorieController {
+public class AdminCategorieController{
 	
 	@Autowired
 	IAdminCategoriesMetier metier;
@@ -52,10 +60,55 @@ public class AdminCategorieController {
 			c.setNomPhoto(multipartFile.getOriginalFilename());
 		}
 		
-		metier.ajouterCategorie(c);
+		if(c.getIdCategorie() != null)	
+			metier.modifierCategorie(c);
+		else
+		{
+			metier.ajouterCategorie(c);
+		}
+		
+		model.addAttribute("categorie",new Categorie());
+		model.addAttribute("categories",metier.listCategories());
+		return "categories";
+	}
+	
+	@RequestMapping(value="CatPhoto", produces =MediaType.IMAGE_JPEG_VALUE)
+	@ResponseBody
+	public byte[] photoCat(@RequestParam Long idCat) throws IOException
+	{
+		Categorie c = metier.getCategorie(idCat);
+		return IOUtils.toByteArray(new ByteArrayInputStream(c.getPhoto()));
+	}
+
+	@RequestMapping(value="deleteCat" , method = RequestMethod.GET)
+	public String deleteCat(@RequestParam Long idCat, Model model)
+	{
+		metier.supprimerCategorie(idCat);
+		model.addAttribute("categorie",new Categorie());
+		model.addAttribute("categories",metier.listCategories());
+		return "categories";
+	}
+	
+	@RequestMapping(value="modifierCat" , method = RequestMethod.GET)
+	public String modifierCat(@RequestParam Long idCat, Model model)
+	{
+		
+		model.addAttribute("categorie",metier.getCategorie(idCat));
+		model.addAttribute("categories",metier.listCategories());
+		return "categories";
+	}
+	
+	@RequestMapping(value="editCategValide" , method = RequestMethod.GET)
+	public String editCategValide(@Valid Categorie c, Model model)
+	{
+		
+		metier.modifierCategorie(c);
 		model.addAttribute("categorie",new Categorie());
 		model.addAttribute("categories",metier.listCategories());
 		return "categories";
 	}
 
+	
+	
+	
 }
