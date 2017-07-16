@@ -1,0 +1,41 @@
+div.cadre
+{
+	border : 2px dotted gray;
+	border-radius: 10px;
+	padding: 10px;
+	margin : 10px;
+}
+
+
+
+
+
+table.tab2 th {
+	border: 1px dotted gray;
+	background-color: pink;
+	padding: 5px;
+	
+}
+
+
+
+
+table.tab2 td {
+	
+	border: 1px dotted gray;
+	background-color: white;
+	padding: 5px;
+	
+}
+
+table
+{
+		width : 100%;
+}
+
+.errors
+{
+	color: red;
+	font: italic;
+}
+
