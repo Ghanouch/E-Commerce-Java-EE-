@@ -28,7 +28,7 @@ import com.cdg.eboutique.metier.IAdminCategoriesMetier;
 
 @Controller
 @RequestMapping(value = "/adminCat")
-public class AdminCategorieController{
+public class AdminCategorieController implements HandlerExceptionResolver{
 	
 	@Autowired
 	IAdminCategoriesMetier metier;
@@ -106,6 +106,17 @@ public class AdminCategorieController{
 		model.addAttribute("categorie",new Categorie());
 		model.addAttribute("categories",metier.listCategories());
 		return "categories";
+	}
+
+	@Override
+	public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,
+			Exception ex) {
+		// TODO Auto-generated method stub
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("categorie",new Categorie());
+		mv.addObject("exception",ex.getMessage());
+		mv.setViewName("categories");
+		return mv;
 	}
 
 	

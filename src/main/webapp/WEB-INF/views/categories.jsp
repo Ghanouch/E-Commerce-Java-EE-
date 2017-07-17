@@ -5,7 +5,7 @@
 <link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/resources/style1.css"></link>
 </head>
 <body>
-	<div id="exception">
+	<div id="exception" class="errors">
 		${exception}
 	</div>
 	<div id="form" class="cadre">
